@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import { DatePicker } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
+import moment from "moment";
+import styled from "styled-components";
+
 import { Itodo } from "components/todo/TodoService";
+
+import { dateValid } from "./utils/Validation";
+import Modals from "../../../common/Modal";
 
 const CircleButton = styled.button<{ open: boolean }>`
   background: #33bb77;
@@ -19,6 +25,7 @@ const CircleButton = styled.button<{ open: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `;
 
 const InsertFormPositioner = styled.div`
@@ -28,11 +35,17 @@ const InsertFormPositioner = styled.div`
 
 const InsertForm = styled.form`
   display: flex;
+  width: 100%;
+  align-items: center;
   background: #eeeeee;
   padding-left: 40px;
   padding-top: 36px;
   padding-right: 60px;
   padding-bottom: 36px;
+
+  div {
+    width: 100%;
+  }
 `;
 
 const Input = styled.input`
@@ -62,6 +75,9 @@ const TodoCreate = ({
 }: TodoCreateProps) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+  const [finishDate, setFinishDate] = useState(new Date().toLocaleDateString());
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMsg, setModalMsg] = useState("");
 
   const handleToggle = () => setOpen(!open);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -70,9 +86,16 @@ const TodoCreate = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 새로고침 방지
 
+    if (value === "" || finishDate === "") {
+      setModalMsg("모든 값을 입력하세요");
+      setModalOpen(true);
+      return;
+    }
+
     createTodo({
       id: nextId,
       text: value,
+      finish: finishDate,
       done: false
     });
     incrementNextId(); // nextId 하나 증가
@@ -81,22 +104,49 @@ const TodoCreate = ({
     setOpen(false); // open 닫기
   };
 
+  function onChange(date, dateString) {
+    if (dateString === "") {
+      setModalMsg("만료일은 반드시 존재해야 합니다.");
+      setModalOpen(true);
+      return;
+    }
+    if (!dateValid(dateString)) {
+      setModalMsg("만료일은 오늘보다 이전일 수 없습니다");
+      setModalOpen(true);
+      return;
+    }
+    setModalOpen(false);
+    setFinishDate(dateString);
+  }
+
   return (
     <>
       <InsertFormPositioner>
         <InsertForm onSubmit={handleSubmit}>
-          <Input
-            autoFocus
-            placeholder="What's need to be done?"
-            onChange={handleChange}
-            value={value}
-          />
-
+          <div>
+            <div>할 일</div>
+            <Input
+              autoFocus
+              placeholder="What's need to be done?"
+              onChange={handleChange}
+              value={value}
+            />
+            <div>만료일</div>
+            <DatePicker
+              onChange={onChange}
+              size="large"
+              value={moment(finishDate, "YYYY-MM-DD")}
+              format="YYYY-MM-DD"
+            />
+          </div>
           <CircleButton onClick={handleToggle} open={open}>
             <PlusCircleOutlined />
           </CircleButton>
         </InsertForm>
       </InsertFormPositioner>
+      <Modals modalOpen={modalOpen} setModalOpen={setModalOpen}>
+        {modalMsg}
+      </Modals>
     </>
   );
 };

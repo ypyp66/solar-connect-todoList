@@ -76,7 +76,11 @@ const TodoItem = ({ toggleTodo, removeTodo, todo }: TodoItemProps) => {
       <CheckCircle done={done} onClick={handleToggle}>
         {done && <CheckOutlined />}
       </CheckCircle>
-      <Text done={done}>{todo.text}</Text>
+      <Text done={done}>
+        {todo.text}
+        <Text done={done}>~{todo.finish}</Text>
+      </Text>
+
       <Remove onClick={handleRemove}>
         <DeleteOutlined />
       </Remove>

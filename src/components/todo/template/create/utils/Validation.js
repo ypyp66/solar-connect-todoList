@@ -16,6 +16,6 @@ export const dateValid = (dateString) => {
         return false;
       }
     }
+    return true;
   }
-  return true;
 };

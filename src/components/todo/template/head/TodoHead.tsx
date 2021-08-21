@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
 
@@ -24,29 +24,22 @@ const TimeText = styled.div`
   padding-left: 10px;
 `;
 
-const options = {
-  weekday: "long",
-  year: "numeric",
-  month: "long",
-  day: "numeric"
-};
-
 const TodoHead = () => {
   //@TODO 현재 시간을 표시해야합니다.
-  const today = useMemo(() => new Date(), []);
-  const [time, setTime] = useState(today.toLocaleTimeString());
+  const today = moment().format("LL");
+  const [time, setTime] = useState(moment().format("LTS"));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime(today.toLocaleTimeString());
+      setTime(moment().format("LTS"));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [today]);
+  }, []);
 
   return (
     <TodoHeadBlock>
-      <DateText>{today.toLocaleDateString("ko-KR", options)}</DateText>
+      <DateText>{today}</DateText>
       <TimeText>{time}</TimeText>
     </TodoHeadBlock>
   );
