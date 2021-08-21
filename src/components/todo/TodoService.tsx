@@ -44,9 +44,9 @@ export const useTodo = () => {
   };
 
   const loadData = () => {
-    let data = localStorage.getItem("todos");
-    if (data === undefined) data = "";
+    const data = localStorage.getItem("todos") || "[]";
     initialTodos = JSON.parse(data!);
+    console.log("initialTodos", initialTodos);
     if (initialTodos && initialTodos.length >= 1) {
       incrementNextId();
     }

@@ -12,9 +12,9 @@ const TodoContainer = () => {
     incrementNextId,
     toggleTodo,
     removeTodo,
-    createTodo,
+    createTodo
   } = useTodo();
-  
+
   return (
     <>
       <TodoTemplate>

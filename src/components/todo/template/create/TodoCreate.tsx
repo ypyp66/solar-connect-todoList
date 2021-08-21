@@ -72,6 +72,8 @@ interface TodoCreateProps {
   incrementNextId: () => void;
 }
 
+const today = new Date();
+
 const TodoCreate = ({
   nextId,
   createTodo,
@@ -79,7 +81,7 @@ const TodoCreate = ({
 }: TodoCreateProps) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const [finishDate, setFinishDate] = useState(new Date().toLocaleDateString());
+  const [finishDate, setFinishDate] = useState(today.toLocaleDateString());
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMsg, setModalMsg] = useState("");
 

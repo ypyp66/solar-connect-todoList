@@ -9,6 +9,10 @@ const Remove = styled.div`
   justify-content: center;
   color: #119955;
   font-size: 16px;
+
+  :hover {
+    color: red;
+  }
 `;
 
 const TodoItemBlock = styled.div`
@@ -20,6 +24,7 @@ const TodoItemBlock = styled.div`
     ${Remove} {
       display: initial;
     }
+    background: #f6f6f6;
   }
 `;
 
