@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 export type Itodo = {
   id: number;
   text: string;
+  finish: string;
   done: boolean;
 };
 

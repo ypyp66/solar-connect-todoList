@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import moment from "moment";
 
 const TodoHeadBlock = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   padding-top: 52px;
   padding-bottom: 24px;
@@ -15,22 +18,36 @@ const DateText = styled.div`
   padding-left: 10px;
 `;
 
-const DayText = styled.div`
-  font-size: 22px;
-  color: #119955;
-  padding-top: 5px;
+const TimeText = styled.div`
+  font-size: 20px;
+  color: #2f9d27;
+  padding-left: 10px;
 `;
+
+const options = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric"
+};
 
 const TodoHead = () => {
   //@TODO 현재 시간을 표시해야합니다.
-  const today = new Date();
-  const dayString = today.getDay();
-  const dateString = "July 20, 2021";
+  const today = useMemo(() => new Date(), []);
+  const [time, setTime] = useState(today.toLocaleTimeString());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(today.toLocaleTimeString());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [today]);
 
   return (
     <TodoHeadBlock>
-      <DayText>{dayString}</DayText>
-      <DateText>{today.toLocaleDateString()}</DateText>
+      <DateText>{today.toLocaleDateString("ko-KR", options)}</DateText>
+      <TimeText>{time}</TimeText>
     </TodoHeadBlock>
   );
 };
